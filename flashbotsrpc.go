@@ -173,7 +173,7 @@ func (rpc *FlashbotsRPC) CallWithFlashbotsSignature(method string, privKey *ecds
 	}
 
 	signature := crypto.PubkeyToAddress(privKey.PublicKey).Hex() + ":" + hexutil.Encode(sig)
-	fmt.Println("----debug-----1.4---", rpc.url, body)
+	fmt.Println("----debug-----1.4---", rpc.url, string(body))
 
 	req, err := http.NewRequest("POST", rpc.url, bytes.NewBuffer(body))
 	if err != nil {
