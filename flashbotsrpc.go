@@ -156,24 +156,30 @@ func (rpc *FlashbotsRPC) CallWithFlashbotsSignature(method string, privKey *ecds
 		Method:  method,
 		Params:  params,
 	}
+	fmt.Println("----debug-----1.1---")
 
 	body, err := json.Marshal(request)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("----debug-----1.2---")
 
 	hashedBody := crypto.Keccak256Hash([]byte(body)).Hex()
 	sig, err := crypto.Sign(accounts.TextHash([]byte(hashedBody)), privKey)
+	fmt.Println("----debug-----1.3---")
+
 	if err != nil {
 		return nil, err
 	}
 
 	signature := crypto.PubkeyToAddress(privKey.PublicKey).Hex() + ":" + hexutil.Encode(sig)
+	fmt.Println("----debug-----1.4---", rpc.url, body)
 
 	req, err := http.NewRequest("POST", rpc.url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("----debug-----1.5---")
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
@@ -181,6 +187,7 @@ func (rpc *FlashbotsRPC) CallWithFlashbotsSignature(method string, privKey *ecds
 	for k, v := range rpc.Headers {
 		req.Header.Add(k, v)
 	}
+	fmt.Println("----debug-----1.6---")
 
 	response, err := rpc.client.Do(req)
 	if response != nil {
